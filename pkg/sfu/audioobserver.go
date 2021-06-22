@@ -2,7 +2,8 @@ package sfu
 
 import (
 	"sort"
-	"sync"
+
+	"github.com/sasha-s/go-deadlock"
 )
 
 type audioStream struct {
@@ -12,7 +13,7 @@ type audioStream struct {
 }
 
 type AudioObserver struct {
-	sync.RWMutex
+	deadlock.RWMutex
 	streams   []*audioStream
 	expected  int
 	threshold uint8

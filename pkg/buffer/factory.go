@@ -6,10 +6,11 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/pion/transport/packetio"
+	"github.com/sasha-s/go-deadlock"
 )
 
 type Factory struct {
-	sync.RWMutex
+	deadlock.RWMutex
 	videoPool   *sync.Pool
 	audioPool   *sync.Pool
 	rtpBuffers  map[uint32]*Buffer

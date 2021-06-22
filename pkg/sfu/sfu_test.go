@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/lucsky/cuid"
+	"github.com/sasha-s/go-deadlock"
 
 	"github.com/pion/ion-sfu/pkg/logger"
 	"github.com/pion/webrtc/v3"
@@ -82,7 +83,7 @@ type action struct {
 
 type peer struct {
 	id        string
-	mu        sync.Mutex
+	mu        deadlock.Mutex
 	local     *PeerLocal
 	remotePub *webrtc.PeerConnection
 	remoteSub *webrtc.PeerConnection
@@ -284,7 +285,7 @@ func TestSFU_SessionScenarios(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			testDone := atomicBool(0)
-			var mu sync.RWMutex
+			var mu deadlock.RWMutex
 			done := make(chan struct{})
 			peers := make(map[string]*peer)
 

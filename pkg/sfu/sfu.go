@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/pion/ion-sfu/pkg/relay"
+	"github.com/sasha-s/go-deadlock"
 
 	"github.com/go-logr/logr"
 	"github.com/pion/ice/v2"
@@ -79,7 +80,7 @@ var (
 
 // SFU represents an sfu instance
 type SFU struct {
-	sync.RWMutex
+	deadlock.RWMutex
 	webrtc       WebRTCTransportConfig
 	turn         *turn.Server
 	sessions     map[string]Session

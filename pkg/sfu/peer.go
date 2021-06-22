@@ -3,9 +3,9 @@ package sfu
 import (
 	"errors"
 	"fmt"
-	"sync"
 
 	"github.com/lucsky/cuid"
+	"github.com/sasha-s/go-deadlock"
 
 	"github.com/pion/webrtc/v3"
 )
@@ -54,7 +54,7 @@ type ChannelAPIMessage struct {
 
 // PeerLocal represents a pair peer connection
 type PeerLocal struct {
-	sync.Mutex
+	deadlock.Mutex
 	id       string
 	closed   atomicBool
 	session  Session

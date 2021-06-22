@@ -1,13 +1,12 @@
 package sfu
 
 import (
-	"sync"
-
 	"github.com/pion/ion-sfu/pkg/buffer"
 	"github.com/pion/ion-sfu/pkg/stats"
 	"github.com/pion/ion-sfu/pkg/twcc"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 // Router defines a track rtp/rtcp Router
@@ -30,7 +29,7 @@ type RouterConfig struct {
 }
 
 type router struct {
-	sync.RWMutex
+	deadlock.RWMutex
 	id            string
 	twcc          *twcc.Responder
 	peer          *webrtc.PeerConnection

@@ -11,6 +11,7 @@ import (
 	"github.com/pion/rtcp"
 	"github.com/pion/transport/packetio"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 // DownTrackType determines the type of a track
@@ -25,7 +26,7 @@ const (
 // to SFU Subscriber, the track handle the packets for simple, simulcast
 // and SVC Publisher.
 type DownTrack struct {
-	mu            sync.RWMutex
+	mu            deadlock.RWMutex
 	id            string
 	peerID        string
 	bound         atomicBool

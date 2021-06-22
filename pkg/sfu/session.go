@@ -3,10 +3,10 @@ package sfu
 import (
 	"context"
 	"encoding/json"
-	"sync"
 	"time"
 
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 // Session represents a set of peers. Transports inside a SessionLocal
@@ -27,7 +27,7 @@ type Session interface {
 
 type SessionLocal struct {
 	id             string
-	mu             sync.RWMutex
+	mu             deadlock.RWMutex
 	peers          map[string]Peer
 	closed         atomicBool
 	audioObs       *AudioObserver

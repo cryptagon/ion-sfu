@@ -14,6 +14,7 @@ import (
 	"github.com/pion/rtp"
 	"github.com/pion/sdp/v3"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 const (
@@ -41,7 +42,7 @@ type ExtPacket struct {
 
 // Buffer contains all packets
 type Buffer struct {
-	sync.Mutex
+	deadlock.Mutex
 	bucket     *Bucket
 	nacker     *nackQueue
 	videoPool  *sync.Pool

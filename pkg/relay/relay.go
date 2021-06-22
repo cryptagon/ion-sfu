@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 const (
@@ -60,8 +60,8 @@ type PeerMeta struct {
 }
 
 type Peer struct {
-	mu              sync.Mutex
-	rmu             sync.Mutex
+	mu              deadlock.Mutex
+	rmu             deadlock.Mutex
 	me              *webrtc.MediaEngine
 	log             logr.Logger
 	api             *webrtc.API

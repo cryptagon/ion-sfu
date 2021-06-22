@@ -5,10 +5,10 @@ import (
 	"math"
 	"math/rand"
 	"sort"
-	"sync"
 
 	"github.com/gammazero/deque"
 	"github.com/pion/rtcp"
+	"github.com/sasha-s/go-deadlock"
 )
 
 const (
@@ -30,7 +30,7 @@ type rtpExtInfo struct {
 // according to:
 // https://tools.ietf.org/html/draft-holmer-rmcat-transport-wide-cc-extensions-01
 type Responder struct {
-	sync.Mutex
+	deadlock.Mutex
 
 	extInfo     []rtpExtInfo
 	lastReport  int64

@@ -10,10 +10,11 @@ import (
 	"github.com/pion/ion-sfu/pkg/relay"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 type Publisher struct {
-	mu  sync.Mutex
+	mu  deadlock.Mutex
 	id  string
 	pc  *webrtc.PeerConnection
 	cfg *WebRTCTransportConfig

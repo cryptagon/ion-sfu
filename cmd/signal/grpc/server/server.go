@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"sync"
 
 	pb "github.com/pion/ion-sfu/cmd/signal/grpc/proto"
 	"github.com/pion/ion-sfu/pkg/sfu"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type SFUServer struct {
 	pb.UnimplementedSFUServer
-	sync.Mutex
+	deadlock.Mutex
 	SFU *sfu.SFU
 }
 

@@ -9,12 +9,13 @@ import (
 	"github.com/bep/debounce"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
+	"github.com/sasha-s/go-deadlock"
 )
 
 const APIChannelLabel = "ion-sfu"
 
 type Subscriber struct {
-	sync.RWMutex
+	deadlock.RWMutex
 
 	id string
 	pc *webrtc.PeerConnection

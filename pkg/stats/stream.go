@@ -2,11 +2,11 @@ package stats
 
 import (
 	"math"
-	"sync"
 	"sync/atomic"
 
 	"github.com/pion/ion-sfu/pkg/buffer"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/sasha-s/go-deadlock"
 )
 
 var (
@@ -94,7 +94,7 @@ func InitStats() {
 
 // Stream contains buffer statistics
 type Stream struct {
-	sync.RWMutex
+	deadlock.RWMutex
 	Buffer        *buffer.Buffer
 	cname         string
 	driftInMillis uint64

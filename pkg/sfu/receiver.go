@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
+	"github.com/sasha-s/go-deadlock"
 
 	"github.com/gammazero/workerpool"
 	"github.com/pion/ion-sfu/pkg/buffer"
@@ -37,8 +38,8 @@ type Receiver interface {
 
 // WebRTCReceiver receives a video track
 type WebRTCReceiver struct {
-	sync.Mutex
-	rtcpMu    sync.Mutex
+	deadlock.Mutex
+	rtcpMu    deadlock.Mutex
 	closeOnce sync.Once
 
 	peerID         string
@@ -52,7 +53,7 @@ type WebRTCReceiver struct {
 	receiver       *webrtc.RTPReceiver
 	codec          webrtc.RTPCodecParameters
 	rtcpCh         chan []rtcp.Packet
-	locks          [3]sync.Mutex
+	locks          [3]deadlock.Mutex
 	buffers        [3]*buffer.Buffer
 	upTracks       [3]*webrtc.TrackRemote
 	stats          [3]*stats.Stream

@@ -1,8 +1,9 @@
 package sfu
 
 import (
-	"sync"
 	"time"
+
+	"github.com/sasha-s/go-deadlock"
 )
 
 const (
@@ -44,7 +45,7 @@ func (p packetMeta) getVP8PayloadMeta() (uint8, uint16) {
 
 // Sequencer stores the packet sequence received by the down track
 type sequencer struct {
-	sync.Mutex
+	deadlock.Mutex
 	init      bool
 	max       int
 	seq       []packetMeta
