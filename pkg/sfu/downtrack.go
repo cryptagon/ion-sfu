@@ -347,10 +347,11 @@ func (d *DownTrack) writeSimpleRTP(extPkt *buffer.ExtPacket) error {
 			}
 		}
 		if d.reBaseTs.get() {
-			d.snOffset = extPkt.Packet.SequenceNumber - d.lastSN - 1
 			d.tsOffset = extPkt.Packet.Timestamp - d.lastTS - 1
 			d.reBaseTs.set(false)
 		}
+
+		d.snOffset = extPkt.Packet.SequenceNumber - d.lastSN - 1
 		atomic.StoreUint32(&d.lastSSRC, extPkt.Packet.SSRC)
 		d.reSync.set(false)
 	}
