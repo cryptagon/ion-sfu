@@ -1,11 +1,13 @@
 package sfu
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/pion/ion-sfu/pkg/buffer"
 	"github.com/pion/ion-sfu/pkg/stats"
 	"github.com/pion/ion-sfu/pkg/twcc"
@@ -45,6 +47,8 @@ type router struct {
 	receivers     map[string]Receiver
 	bufferFactory *buffer.Factory
 	writeRTCP     func([]rtcp.Packet) error
+
+	maxDownstreamFractionLost uint8
 }
 
 // newRouter for routing rtp/rtcp packets
@@ -89,6 +93,19 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 	buff, rtcpReader := r.bufferFactory.GetBufferPair(uint32(track.SSRC()))
 
 	buff.OnFeedback(func(fb []rtcp.Packet) {
+		for _, p := range fb {
+			if rr, ok := p.(*rtcp.ReceiverReport); ok {
+				for i := range rr.Reports {
+					rr.Reports[i].FractionLost = r.maxDownstreamFractionLost
+				}
+			}
+
+		}
+
+		spew.Config.DisableMethods = true
+		spew.Dump(fb)
+		r.maxDownstreamFractionLost = 0
+
 		r.rtcpCh <- fb
 	})
 
@@ -241,6 +258,19 @@ func (r *router) AddDownTrack(sub *Subscriber, recv Receiver) (*DownTrack, error
 	if err != nil {
 		return nil, err
 	}
+
+	// Pull max fraction lost from downstream reports
+	// we will send this in our reception report
+	downTrack.onReceiverReport = func(rr *rtcp.ReceiverReport) {
+		for _, report := range rr.Reports {
+
+			fmt.Printf("got downtrack fraction lost: ", report.FractionLost)
+			if report.FractionLost > r.maxDownstreamFractionLost {
+				r.maxDownstreamFractionLost = report.FractionLost
+			}
+		}
+	}
+
 	// Create webrtc sender for the peer we are sending track to
 	if downTrack.transceiver, err = sub.pc.AddTransceiverFromTrack(downTrack, webrtc.RTPTransceiverInit{
 		Direction: webrtc.RTPTransceiverDirectionSendonly,
