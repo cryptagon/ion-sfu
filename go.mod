@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/bep/debounce v1.2.0
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
 	github.com/gammazero/deque v0.1.0
 	github.com/gammazero/workerpool v1.1.2

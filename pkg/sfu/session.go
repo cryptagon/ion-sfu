@@ -18,6 +18,7 @@ type Session interface {
 	AddPeer(peer Peer)
 	RemovePeer(peer Peer)
 	AudioObserver() *AudioObserver
+	AudioForceFECFractionLost() uint8
 	AddDatachannel(owner string, dc *webrtc.DataChannel)
 	GetDCMiddlewares() []*Datachannel
 	GetDataChannelLabels() []string
@@ -319,4 +320,11 @@ func (s *SessionLocal) GetDataChannels(origin, label string) []*webrtc.DataChann
 		}
 	}
 	return dcs
+}
+
+// AudioForceFECFractionLost allows you to set a min fake packet loss
+// inside the receiver reports on audio tracks to force Opus useinbandfec=1
+// to always be sending fec packets
+func (s *SessionLocal) AudioForceFECFractionLost() uint8 {
+	return 0
 }

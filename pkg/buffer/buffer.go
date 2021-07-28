@@ -500,12 +500,8 @@ func (b *Buffer) SetSenderReportData(rtpTime uint32, ntpTime uint64) {
 func (b *Buffer) getRTCP() []rtcp.Packet {
 	var pkts []rtcp.Packet
 
-	rr := b.buildReceptionReport()
-	if b.codecType == webrtc.RTPCodecTypeAudio {
-		rr.FractionLost = 26 // 255  0.1f
-	}
 	pkts = append(pkts, &rtcp.ReceiverReport{
-		Reports: []rtcp.ReceptionReport{rr},
+		Reports: []rtcp.ReceptionReport{b.buildReceptionReport()},
 	})
 
 	if b.remb && !b.twcc {
