@@ -25,7 +25,6 @@ type Session interface {
 	RemovePeer(peer Peer)
 	AddRelayPeer(peerID string, signalData []byte) ([]byte, error)
 	AudioObserver() *AudioObserver
-	AudioForceFECFractionLost() uint8
 	AddDatachannel(owner string, dc *webrtc.DataChannel)
 	GetDCMiddlewares() []*Datachannel
 	GetFanOutDataChannelLabels() []string

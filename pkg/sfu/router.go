@@ -264,7 +264,7 @@ func (r *router) AddDownTrack(sub *Subscriber, recv Receiver) (*DownTrack, error
 	downTrack.onReceiverReport = func(rr *rtcp.ReceiverReport) {
 		for _, report := range rr.Reports {
 
-			fmt.Printf("got downtrack fraction lost: ", report.FractionLost)
+			fmt.Printf("got downtrack fraction lost: %v", report.FractionLost)
 			if report.FractionLost > r.maxDownstreamFractionLost {
 				r.maxDownstreamFractionLost = report.FractionLost
 			}
