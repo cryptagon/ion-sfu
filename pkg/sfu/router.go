@@ -92,14 +92,17 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 
 	buff, rtcpReader := r.bufferFactory.GetBufferPair(uint32(track.SSRC()))
 
+	isAudio := (track.Kind() == webrtc.RTPCodecTypeAudio)
+
 	buff.OnFeedback(func(fb []rtcp.Packet) {
-		for _, p := range fb {
-			if rr, ok := p.(*rtcp.ReceiverReport); ok {
-				for i := range rr.Reports {
-					rr.Reports[i].FractionLost = r.maxDownstreamFractionLost
+		if isAudio {
+			for _, p := range fb {
+				if rr, ok := p.(*rtcp.ReceiverReport); ok {
+					for i := range rr.Reports {
+						rr.Reports[i].FractionLost = r.maxDownstreamFractionLost
+					}
 				}
 			}
-
 		}
 
 		spew.Config.DisableMethods = true
