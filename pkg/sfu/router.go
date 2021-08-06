@@ -7,7 +7,6 @@ import (
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/pion/ion-sfu/pkg/buffer"
 	"github.com/pion/ion-sfu/pkg/stats"
 	"github.com/pion/ion-sfu/pkg/twcc"
@@ -99,16 +98,16 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 			for _, p := range fb {
 				if rr, ok := p.(*rtcp.ReceiverReport); ok {
 					for i := range rr.Reports {
-						rr.Reports[i].FractionLost = r.maxDownstreamFractionLost
+						// If downstream tracks are having packet loss greater than we are
+						// Overwrite the FractionLost so the upstream opus FEC is enabled
+						if r.maxDownstreamFractionLost > rr.Reports[i].FractionLost {
+							rr.Reports[i].FractionLost = r.maxDownstreamFractionLost
+						}
 					}
 				}
 			}
 		}
-
-		spew.Config.DisableMethods = true
-		spew.Dump(fb)
 		r.maxDownstreamFractionLost = 0
-
 		r.rtcpCh <- fb
 	})
 
