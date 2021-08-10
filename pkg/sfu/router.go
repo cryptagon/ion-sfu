@@ -1,7 +1,6 @@
 package sfu
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/pion/ion-sfu/pkg/buffer"
@@ -254,7 +253,7 @@ func (r *router) addDownTrack(sub *Subscriber, recv Receiver) error {
 	downTrack.onReceiverReport = func(rr *rtcp.ReceiverReport) {
 		for _, report := range rr.Reports {
 
-			fmt.Printf("got downtrack fraction lost: %v", report.FractionLost)
+			Logger.V(4).Info("got downtrack fraction lost: %v\n", report.FractionLost)
 			if report.FractionLost > r.maxDownstreamFractionLost {
 				r.maxDownstreamFractionLost = report.FractionLost
 			}
