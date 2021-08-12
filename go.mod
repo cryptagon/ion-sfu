@@ -2,6 +2,8 @@ module github.com/pion/ion-sfu
 
 go 1.13
 
+replace github.com/pion/webrtc/v3 => github.com/billylindeman/webrtc/v3 v3.1.0-beta.5
+
 require (
 	github.com/bep/debounce v1.2.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
