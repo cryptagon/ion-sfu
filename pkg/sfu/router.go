@@ -166,7 +166,7 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 
 	recv, ok := r.receivers[trackID]
 	if !ok {
-		recv = NewWebRTCReceiver(receiver, track, r.id, WithPliThrottle(r.config.PliThrottle*1e6))
+		recv = NewWebRTCReceiver(receiver, track, r.id, WithPliThrottle(r.config.PliThrottle*1e6), WithStreamTrackers())
 		r.receivers[trackID] = recv
 		recv.SetRTCPCh(r.rtcpCh)
 		recv.OnCloseHandler(func() {

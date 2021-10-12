@@ -207,7 +207,7 @@ func (w *WebRTCReceiver) AddUpTrack(track *webrtc.TrackRemote, buff *buffer.Buff
 		w.downTrackMu.RLock()
 		for _, dt := range w.downTracks {
 			if dt != nil {
-				if (bestQualityFirst && layer > dt.CurrentSpatialLayer()) ||
+				if (bestQualityFirst && layer > dt.CurrentSpatialLayer() && layer <= dt.maxSpatialLayer.get()) ||
 					(!bestQualityFirst && layer < dt.CurrentSpatialLayer()) {
 					_ = dt.SwitchSpatialLayer(layer, false)
 				}

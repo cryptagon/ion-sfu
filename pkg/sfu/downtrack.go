@@ -229,6 +229,9 @@ func (d *DownTrack) SwitchSpatialLayer(targetLayer int32, setAsMax bool) error {
 	if d.trackType != SimulcastDownTrack {
 		return ErrSpatialNotSupported
 	}
+	if setAsMax && d.maxSpatialLayer.get() != targetLayer {
+		d.maxSpatialLayer.set(targetLayer)
+	}
 	if !d.receiver.HasSpatialLayer(targetLayer) {
 		return ErrSpatialLayerNotFound
 	}
@@ -236,11 +239,7 @@ func (d *DownTrack) SwitchSpatialLayer(targetLayer int32, setAsMax bool) error {
 	if d.CurrentSpatialLayer() == targetLayer {
 		return nil
 	}
-
 	d.targetSpatialLayer.set(targetLayer)
-	if setAsMax {
-		d.maxSpatialLayer.set(targetLayer)
-	}
 	return nil
 }
 
