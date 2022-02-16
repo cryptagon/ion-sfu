@@ -2,7 +2,7 @@ module github.com/pion/ion-sfu
 
 go 1.13
 
-replace github.com/pion/webrtc/v3 => github.com/billylindeman/webrtc/v3 v3.1.0-beta.9-tandem
+replace github.com/pion/webrtc/v3 => github.com/cryptagon/webrtc/v3 v3.1.23-tandem
 
 require (
 	github.com/bep/debounce v1.2.0
@@ -23,7 +23,7 @@ require (
 	github.com/pion/sdp/v3 v3.0.4
 	github.com/pion/transport v0.12.3
 	github.com/pion/turn/v2 v2.0.5
-	github.com/pion/webrtc/v3 v3.1.1
+	github.com/pion/webrtc/v3 v3.1.23
 	github.com/prometheus/client_golang v1.9.0
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/rs/zerolog v1.23.0

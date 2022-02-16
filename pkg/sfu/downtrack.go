@@ -149,6 +149,11 @@ func (d *DownTrack) Kind() webrtc.RTPCodecType {
 	}
 }
 
+// RID is required by `webrtc.TrackLocal` interface
+func (d *DownTrack) RID() string {
+	return ""
+}
+
 func (d *DownTrack) Stop() error {
 	if d.transceiver != nil {
 		return d.transceiver.Stop()
