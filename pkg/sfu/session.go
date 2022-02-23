@@ -88,6 +88,15 @@ func (s *SessionLocal) GetFanOutDataChannelLabels() []string {
 
 func (s *SessionLocal) AddPeer(peer Peer) {
 	s.mu.Lock()
+
+	if s.closed.get() {
+		Logger.V(0).Info("Attempting to add peer to a closed session: ", "session_id", s.ID(), "peer_id", peer.ID())
+	}
+
+	if oldPeer, ok := s.peers[peer.ID()]; ok {
+		Logger.V(0).Info("Found duplicate peer, force closing", "session_id", s.ID(), "peer_id", oldPeer.ID())
+		defer oldPeer.Close()
+	}
 	s.peers[peer.ID()] = peer
 	s.mu.Unlock()
 }
