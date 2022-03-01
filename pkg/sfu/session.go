@@ -334,9 +334,12 @@ func (s *SessionLocal) OnClose(f func()) {
 }
 
 func (s *SessionLocal) Close() {
+	Logger.Info("SessionLocal Close() called", "session_id", s.ID())
 	if !s.closed.set(true) {
+		Logger.Info("SessionLocal Close() couldn't set s.closed=true", "session_id", s.ID())
 		return
 	}
+
 	if s.onCloseHandler != nil {
 		s.onCloseHandler()
 	}
