@@ -94,6 +94,10 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 	isAudio := (track.Kind() == webrtc.RTPCodecTypeAudio)
 
 	buff.OnFeedback(func(fb []rtcp.Packet) {
+		if r == nil {
+			Logger.Info("WARN r is nil")
+			return
+		}
 		if isAudio {
 			for _, p := range fb {
 				if rr, ok := p.(*rtcp.ReceiverReport); ok {
