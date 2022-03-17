@@ -128,7 +128,7 @@ func (r *RelayPeer) createRelayTrack(track *webrtc.TrackRemote, receiver Receive
 		Channels:     codec.Channels,
 		SDPFmtpLine:  codec.SDPFmtpLine,
 		RTCPFeedback: []webrtc.RTCPFeedback{{"nack", ""}, {"nack", "pli"}},
-	}, receiver, r.config.BufferFactory, r.ID(), r.config.Router.MaxPacketTrack)
+	}, receiver, r.config.BufferFactory, r.ID(), r.config.Router.MaxPacketTrack, 0)
 	if err != nil {
 		Logger.V(1).Error(err, "Create Relay downtrack err", "peer_id", r.ID())
 		return err

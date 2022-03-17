@@ -80,6 +80,7 @@ func NewPublisher(id string, session Session, cfg *WebRTCTransportConfig) (*Publ
 			"mediaSSRC", track.SSRC(),
 			"rid", track.RID(),
 			"stream_id", track.StreamID(),
+			"PayloadType", track.PayloadType(),
 		)
 
 		r, pub := p.router.AddReceiver(receiver, track, track.ID(), track.StreamID())
@@ -370,7 +371,7 @@ func (p *Publisher) createRelayTrack(track *webrtc.TrackRemote, receiver Receive
 		Channels:     codec.Channels,
 		SDPFmtpLine:  codec.SDPFmtpLine,
 		RTCPFeedback: []webrtc.RTCPFeedback{{"nack", ""}, {"nack", "pli"}},
-	}, receiver, p.cfg.BufferFactory, p.id, p.cfg.Router.MaxPacketTrack)
+	}, receiver, p.cfg.BufferFactory, p.id, p.cfg.Router.MaxPacketTrack, 0)
 	if err != nil {
 		Logger.V(1).Error(err, "Create Relay downtrack err", "peer_id", p.id)
 		return err
