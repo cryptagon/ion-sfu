@@ -77,7 +77,8 @@ type DownTrack struct {
 }
 
 // NewDownTrack returns a DownTrack.
-func NewDownTrack(c webrtc.RTPCodecCapability, r Receiver, bf *buffer.Factory, peerID string, mt int) (*DownTrack, error) {
+func NewDownTrack(c webrtc.RTPCodecCapability, r Receiver, bf *buffer.Factory, peerID string, mt int, pt uint8) (*DownTrack, error) {
+
 	return &DownTrack{
 		id:            r.TrackID(),
 		peerID:        peerID,
@@ -86,6 +87,7 @@ func NewDownTrack(c webrtc.RTPCodecCapability, r Receiver, bf *buffer.Factory, p
 		bufferFactory: bf,
 		receiver:      r,
 		codec:         c,
+		payloadType:   pt,
 	}, nil
 }
 
@@ -96,7 +98,9 @@ func (d *DownTrack) Bind(t webrtc.TrackLocalContext) (webrtc.RTPCodecParameters,
 	parameters := webrtc.RTPCodecParameters{RTPCodecCapability: d.codec}
 	if codec, err := codecParametersFuzzySearch(parameters, t.CodecParameters()); err == nil {
 		d.ssrc = uint32(t.SSRC())
-		d.payloadType = uint8(codec.PayloadType)
+		if d.payloadType == 0 {
+			d.payloadType = uint8(codec.PayloadType)
+		}
 		d.writeStream = t.WriteStream()
 		d.mime = strings.ToLower(codec.MimeType)
 		d.reSync.set(true)
@@ -666,6 +670,7 @@ func (d *DownTrack) DebugInfo() map[string]interface{} {
 		"TrackID":             d.id,
 		"StreamID":            d.streamID,
 		"SSRC":                d.ssrc,
+		"PayloadType":         d.payloadType,
 		"MimeType":            d.codec.MimeType,
 		"Bound":               d.bound.get(),
 		"Enabled":             d.enabled.get(),
