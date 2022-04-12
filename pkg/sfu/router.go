@@ -15,7 +15,7 @@ import (
 // Router defines a track rtp/rtcp Router
 type Router interface {
 	ID() string
-	AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRemote, trackID, streamID string) (Receiver, bool)
+	AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRemote, trackID, streamID string) (Receiver, bool, error)
 	AddDownTracks(s *Subscriber, r Receiver) error
 	SetRTCPWriter(func([]rtcp.Packet) error)
 	AddDownTrack(s *Subscriber, r Receiver) (*DownTrack, error)
@@ -83,7 +83,7 @@ func (r *router) Stop() {
 	}
 }
 
-func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRemote, trackID, streamID string) (Receiver, bool) {
+func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRemote, trackID, streamID string) (Receiver, bool, error) {
 	r.Lock()
 	defer r.Unlock()
 
@@ -92,6 +92,10 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 	buff, rtcpReader := r.bufferFactory.GetBufferPair(uint32(track.SSRC()))
 
 	isAudio := (track.Kind() == webrtc.RTPCodecTypeAudio)
+
+	if buff == nil {
+		return nil, false, fmt.Errorf("buff cannot be nil!")
+	}
 
 	buff.OnFeedback(func(fb []rtcp.Packet) {
 		if r == nil {
@@ -206,7 +210,7 @@ func (r *router) AddReceiver(receiver *webrtc.RTPReceiver, track *webrtc.TrackRe
 		}
 	}
 
-	return recv, publish
+	return recv, publish, nil
 }
 
 func (r *router) AddDownTracks(s *Subscriber, recv Receiver) error {

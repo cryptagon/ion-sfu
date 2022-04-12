@@ -83,7 +83,11 @@ func NewPublisher(id string, session Session, cfg *WebRTCTransportConfig) (*Publ
 			"PayloadType", track.PayloadType(),
 		)
 
-		r, pub := p.router.AddReceiver(receiver, track, track.ID(), track.StreamID())
+		r, pub, err := p.router.AddReceiver(receiver, track, track.ID(), track.StreamID())
+		if err != nil {
+			Logger.V(1).Error(err, "Error adding receiver: ")
+			return
+		}
 		if pub {
 			p.session.Publish(p.router, r)
 			p.mu.Lock()
